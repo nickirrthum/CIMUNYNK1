@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cmyk-c: #22B8E6;
+    --cmyk-m: #E5379B;
+    --cmyk-y: #F5C518;
+    --cmyk-k: #2A2A2E;
+    --paper:  #FAF8F4;
+  }
+
+  html, body {
+    background: var(--paper);
+  }
+
+  body {
+    font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2A2A2E;
+  }
+
+  ::selection {
+    background: #F5C518;
+    color: #2A2A2E;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #22B8E6 0%, #E5379B 50%, #F5C518 100%);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { opacity: .85; }
+}
+
+@layer components {
+  /* ─── PAPER BACKGROUND with subtle grain + diagonal CMYK accents ─────── */
+  .paper-bg {
+    position: relative;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(135deg, transparent 0, transparent 100%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-blend-mode: multiply;
+  }
+  .paper-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, rgba(34,184,230,0.05) 0%, transparent 14%),
+      linear-gradient(-45deg, rgba(229,55,155,0.04) 0%, transparent 12%);
+    z-index: 0;
+  }
+  .paper-bg > * { position: relative; z-index: 1; }
+
+  /* ─── CMYK Diagonal stripe accent (decorative corner) ─────────────────── */
+  .cmyk-stripe {
+    background-image: repeating-linear-gradient(
+      135deg,
+      #22B8E6 0 6px,
+      #E5379B 6px 12px,
+      #F5C518 12px 18px,
+      #2A2A2E 18px 24px
+    );
+  }
+  .cmyk-stripe-soft {
+    background-image: linear-gradient(
+      135deg,
+      #22B8E6 0 25%,
+      #E5379B 25% 50%,
+      #F5C518 50% 75%,
+      #2A2A2E 75% 100%
+    );
+  }
+  .cmyk-stripe-thin {
+    background-image: repeating-linear-gradient(
+      135deg,
+      #22B8E6 0 2px,
+      transparent 2px 6px,
+      #E5379B 6px 8px,
+      transparent 8px 12px,
+      #F5C518 12px 14px,
+      transparent 14px 18px,
+      #2A2A2E 18px 20px,
+      transparent 20px 28px
+    );
+  }
+
+  /* ─── Card with CMYK registration mark in top-right ─────────────────── */
+  .card-print {
+    position: relative;
+    background: #fff;
+    border: 1px solid #EEEEF1;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(42,42,46,0.04), 0 4px 16px rgba(42,42,46,0.05);
+    overflow: hidden;
+    transition: box-shadow .2s ease, transform .2s ease;
+  }
+  .card-print:hover {
+    box-shadow: 0 2px 4px rgba(42,42,46,0.05), 0 8px 28px rgba(42,42,46,0.08);
+  }
+  .card-print::before {
+    /* CMYK registration mark – four colored arcs forming a circle */
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background:
+      conic-gradient(
+        #22B8E6 0deg 90deg,
+        #E5379B 90deg 180deg,
+        #F5C518 180deg 270deg,
+        #2A2A2E 270deg 360deg
+      );
+    -webkit-mask: radial-gradient(circle, transparent 5px, #000 5.5px, #000 7.5px, transparent 8px);
+            mask: radial-gradient(circle, transparent 5px, #000 5.5px, #000 7.5px, transparent 8px);
+    opacity: .55;
+    pointer-events: none;
+  }
+  .card-print::after {
+    /* Tiny crosshair center of the registration mark */
+    content: "";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background:
+      linear-gradient(#2A2A2E, #2A2A2E) center / 100% 1px no-repeat,
+      linear-gradient(#2A2A2E, #2A2A2E) center / 1px 100% no-repeat;
+    opacity: .35;
+    pointer-events: none;
+  }
+  .card-print-quiet::before,
+  .card-print-quiet::after { display: none; }
+
+  /* ─── COMUNYNK wordmark ─────────────────────────────────────────────── */
+  .wordmark-comunynk {
+    font-family: 'Archivo Black', 'Manrope', sans-serif;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    display: inline-flex;
+  }
+  .wordmark-comunynk > span {
+    text-shadow:
+      0 1px 0 rgba(0,0,0,0.18),
+      0 2px 1px rgba(0,0,0,0.10);
+  }
+  .wordmark-co { color: #22B8E6; }
+  .wordmark-mu { color: #E5379B; }
+  .wordmark-ny { color: #E0B617; }
+  .wordmark-nk { color: #2A2A2E; }
+
+  /* ─── Ink-square icon (4 CMYK quadrants) ───────────────────────────── */
+  .ink-square {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.08);
+  }
+  .ink-square > span:nth-child(1) { background: #22B8E6; }
+  .ink-square > span:nth-child(2) { background: #E5379B; }
+  .ink-square > span:nth-child(3) { background: #F5C518; }
+  .ink-square > span:nth-child(4) { background: #2A2A2E; }
+
+  /* ─── Registration mark (used in headers/loading) ──────────────────── */
+  .reg-mark {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background:
+      conic-gradient(
+        #22B8E6 0deg 90deg,
+        #E5379B 90deg 180deg,
+        #F5C518 180deg 270deg,
+        #2A2A2E 270deg 360deg
+      );
+    -webkit-mask: radial-gradient(circle, transparent 5.5px, #000 6px, #000 9px, transparent 9.5px);
+            mask: radial-gradient(circle, transparent 5.5px, #000 6px, #000 9px, transparent 9.5px);
+  }
+  .reg-mark::before, .reg-mark::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(#2A2A2E, #2A2A2E) center / 100% 1px no-repeat,
+      linear-gradient(#2A2A2E, #2A2A2E) center / 1px 100% no-repeat;
+  }
+
+  /* ─── Loading dot CMYK ────────────────────────────────────────────── */
+  .cmyk-loader {
+    display: inline-flex;
+    gap: 4px;
+  }
+  .cmyk-loader > span {
+    width: 8px; height: 8px; border-radius: 50%;
+    animation: inkPulse 1s ease-in-out infinite;
+  }
+  .cmyk-loader > span:nth-child(1) { background: #22B8E6; animation-delay: 0s;    }
+  .cmyk-loader > span:nth-child(2) { background: #E5379B; animation-delay: .12s;  }
+  .cmyk-loader > span:nth-child(3) { background: #F5C518; animation-delay: .24s;  }
+  .cmyk-loader > span:nth-child(4) { background: #2A2A2E; animation-delay: .36s;  }
+}
+
+/* Recharts (kept for legacy) */
+.recharts-tooltip-wrapper { outline: none !important; }
+.recharts-legend-item-text { font-size: 12px !important; color: #52525A !important; }

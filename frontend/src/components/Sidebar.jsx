@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ComunynkLogo, { InkSquare } from './ComunynkLogo';
 
 const IconGrid = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -17,20 +18,10 @@ const IconDown = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
   </svg>
 );
-const IconDoc = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-  </svg>
-);
 const IconTag = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
-  </svg>
-);
-const IconCart = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
   </svg>
 );
 const IconList = () => (
@@ -50,12 +41,12 @@ const IconLogout = () => (
 );
 
 const navItems = [
-  { to: '/',           end: true,  label: 'Caixa',              Icon: IconCaixa, group: 'financeiro' },
-  { to: '/dashboard',  end: false, label: 'Dashboard',          Icon: IconGrid,  group: 'financeiro' },
-  { to: '/receitas',   end: false, label: 'Receitas',           Icon: IconUp,    group: 'financeiro' },
-  { to: '/despesas',   end: false, label: 'Despesas',           Icon: IconDown,  group: 'financeiro' },
-  { to: '/quotes',     end: false, label: 'Orçamentos',         Icon: IconList,  group: 'financeiro' },
-  { to: '/products',   end: false, label: 'Produtos',           Icon: IconTag,   group: 'grafica'    },
+  { to: '/',           end: true,  label: 'Caixa',              Icon: IconCaixa, group: 'financeiro', accent: '#22B8E6' },
+  { to: '/dashboard',  end: false, label: 'Dashboard',          Icon: IconGrid,  group: 'financeiro', accent: '#22B8E6' },
+  { to: '/receitas',   end: false, label: 'Receitas',           Icon: IconUp,    group: 'financeiro', accent: '#22B8E6' },
+  { to: '/despesas',   end: false, label: 'Despesas',           Icon: IconDown,  group: 'financeiro', accent: '#E5379B' },
+  { to: '/quotes',     end: false, label: 'Orçamentos',         Icon: IconList,  group: 'grafica',    accent: '#F5C518' },
+  { to: '/products',   end: false, label: 'Produtos',           Icon: IconTag,   group: 'grafica',    accent: '#F5C518' },
 ];
 
 export default function Sidebar({ onClose }) {
@@ -65,27 +56,29 @@ export default function Sidebar({ onClose }) {
   const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
-    <aside className="w-[232px] shrink-0 bg-[#0A0A0B] flex flex-col h-screen">
+    <aside className="w-[248px] shrink-0 bg-white border-r border-ink-100 flex flex-col h-screen relative overflow-hidden">
+      {/* decorative CMYK diagonal stripe at top */}
+      <div className="absolute top-0 left-0 right-0 h-[3px] cmyk-stripe-soft" aria-hidden="true" />
+
       {/* Logo */}
-      <div className="px-5 pt-5 pb-4 border-b border-white/[0.06]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center shrink-0">
-            <span className="text-white text-[10px] font-bold tracking-tight">FC</span>
-          </div>
-          <span className="text-white font-semibold text-sm tracking-tight">Fluxo de Caixa</span>
-        </div>
+      <div className="px-5 pt-6 pb-5 border-b border-ink-100 relative">
+        <ComunynkLogo size="sm" withTagline />
+        {/* corner registration mark */}
+        <div className="absolute top-3 right-4 reg-mark opacity-60" aria-hidden="true" />
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
-        {navItems.map(({ to, end, label, Icon, group }, idx) => {
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        {navItems.map(({ to, end, label, Icon, group, accent }, idx) => {
           const prevGroup = idx > 0 ? navItems[idx - 1].group : null;
           const showDivider = prevGroup && prevGroup !== group;
           return (
             <React.Fragment key={to}>
               {showDivider && (
-                <div className="px-3 pt-3 pb-1">
-                  <p className="text-[10px] font-semibold text-white/20 uppercase tracking-widest">Gráfica</p>
+                <div className="px-3 pt-4 pb-1.5 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-sm bg-cmyk-y" />
+                  <p className="text-[10px] font-bold text-ink-400 uppercase tracking-[0.22em]">Gráfica</p>
+                  <span className="flex-1 h-px bg-ink-100" />
                 </div>
               )}
               <NavLink
@@ -93,15 +86,25 @@ export default function Sidebar({ onClose }) {
                 end={end}
                 onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                  `relative flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 group ${
                     isActive
-                      ? 'bg-white/10 text-white font-medium'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] font-normal'
+                      ? 'bg-ink-50 text-ink-900 font-semibold'
+                      : 'text-ink-500 hover:text-ink-800 hover:bg-ink-50/60 font-medium'
                   }`
                 }
+                style={({ isActive }) => isActive ? { boxShadow: `inset 3px 0 0 ${accent}` } : {}}
               >
-                <Icon />
-                {label}
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className="transition-colors"
+                      style={{ color: isActive ? accent : undefined }}
+                    >
+                      <Icon />
+                    </span>
+                    <span>{label}</span>
+                  </>
+                )}
               </NavLink>
             </React.Fragment>
           );
@@ -109,21 +112,24 @@ export default function Sidebar({ onClose }) {
       </nav>
 
       {/* User */}
-      <div className="p-3 border-t border-white/[0.06]">
+      <div className="p-3 border-t border-ink-100 relative">
         <div className="flex items-center gap-2.5 px-3 py-2 mb-1">
-          <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-            <span className="text-white text-[11px] font-semibold">{user?.nome?.charAt(0)?.toUpperCase()}</span>
+          <div className="relative shrink-0">
+            <InkSquare size={28} />
+            <span className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-white mix-blend-difference">
+              {user?.nome?.charAt(0)?.toUpperCase()}
+            </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-white/80 truncate leading-tight">{user?.nome}</p>
-            <p className="text-[11px] text-zinc-500 leading-tight capitalize">
+            <p className="text-xs font-bold text-ink-800 truncate leading-tight">{user?.nome}</p>
+            <p className="text-[10px] text-ink-400 leading-tight uppercase tracking-wider mt-0.5">
               {user?.nivel_acesso === 'admin' ? 'Administrador' : 'Visualizador'}
             </p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.06] rounded-lg transition-colors duration-150"
+          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink-500 hover:text-cmyk-m hover:bg-cmyk-m-soft rounded-xl transition-colors duration-150"
         >
           <IconLogout />
           Sair da conta

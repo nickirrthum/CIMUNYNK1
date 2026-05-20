@@ -20,20 +20,25 @@ const STATUS_CLS = {
   cancelado:'bg-zinc-100 text-zinc-500',
 };
 
-// Clean palette — sem magenta
+// Comunynk CMYK softened palette
 const C = {
-  emerald: '#10b981',
-  rose:    '#f43f5e',
-  blue:    '#3b82f6',
-  amber:   '#f59e0b',
-  indigo:  '#6366f1',
-  zinc:    '#71717a',
+  cyan:    '#22B8E6',
+  magenta: '#E5379B',
+  yellow:  '#E0B617',  // darkened yellow for legibility
+  black:   '#2A2A2E',
+  // semantic aliases (keeping CMYK soul)
+  emerald: '#22B8E6',  // receita / positivo → cyan
+  rose:    '#E5379B',  // despesa / negativo → magenta
+  blue:    '#22B8E6',
+  amber:   '#E0B617',
+  indigo:  '#6B5BD2',
+  zinc:    '#52525A',
 };
-const CHART_PALETTE = [C.blue, C.emerald, C.amber, C.zinc, C.indigo, C.rose];
+const CHART_PALETTE = [C.cyan, C.magenta, C.yellow, C.black, '#6B5BD2', '#7DD3F2'];
 
-const AXIS_COLOR  = '#e4e4e7';
-const LABEL_COLOR = '#a1a1aa';
-const GRID_COLOR  = '#f4f4f5';
+const AXIS_COLOR  = '#D8D8DD';
+const LABEL_COLOR = '#7C7C85';
+const GRID_COLOR  = '#EEEEF1';
 const TOOLTIP_STYLE = {
   backgroundColor: '#ffffff',
   borderColor: '#e4e4e7',
@@ -75,10 +80,10 @@ function MetricCard({ label, value, sub, color = 'default', icon }) {
 
 function ChartCard({ title, subtitle, children, className = '' }) {
   return (
-    <div className={`bg-white rounded-2xl border border-zinc-100 shadow-sm overflow-hidden ${className}`}>
+    <div className={`card-print ${className}`}>
       <div className="px-5 pt-5 pb-1">
-        <p className="text-sm font-semibold text-zinc-800">{title}</p>
-        {subtitle && <p className="text-[11px] text-zinc-400 mt-0.5">{subtitle}</p>}
+        <p className="text-sm font-bold text-ink-800 tracking-tight">{title}</p>
+        {subtitle && <p className="text-[11px] text-ink-400 mt-0.5">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -127,16 +132,16 @@ function buildBarOption(data) {
         type: 'bar',
         barMaxWidth: 28,
         data: data.map(d => d.receitas ?? 0),
-        itemStyle: { color: C.emerald, borderRadius: [4, 4, 0, 0] },
-        emphasis: { itemStyle: { color: '#059669' } },
+        itemStyle: { color: C.cyan, borderRadius: [4, 4, 0, 0] },
+        emphasis: { itemStyle: { color: '#1A9ECF' } },
       },
       {
         name: 'Despesas',
         type: 'bar',
         barMaxWidth: 28,
         data: data.map(d => d.despesas ?? 0),
-        itemStyle: { color: '#fda4af', borderRadius: [4, 4, 0, 0] },
-        emphasis: { itemStyle: { color: C.rose } },
+        itemStyle: { color: '#F4A4CC', borderRadius: [4, 4, 0, 0] },
+        emphasis: { itemStyle: { color: C.magenta } },
       },
     ],
   };
@@ -244,10 +249,10 @@ function buildMargemOption(data) {
       type: 'bar',
       data: data.map(m => ({
         value: m.margem,
-        itemStyle: { color: C.blue, borderRadius: [0, 6, 6, 0] },
+        itemStyle: { color: C.cyan, borderRadius: [0, 6, 6, 0] },
       })),
       barMaxWidth: 20,
-      emphasis: { itemStyle: { color: '#2563eb' } },
+      emphasis: { itemStyle: { color: '#1A9ECF' } },
       animationEasing: 'elasticOut',
     }],
   };
@@ -293,11 +298,11 @@ function buildLinhaOption(data) {
         smooth: true,
         symbolSize: 7,
         symbol: 'circle',
-        itemStyle: { color: C.emerald },
-        lineStyle: { color: C.emerald, width: 2.5 },
+        itemStyle: { color: C.cyan },
+        lineStyle: { color: C.cyan, width: 2.5 },
         areaStyle: {
           color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [{ offset: 0, color: 'rgba(16,185,129,0.15)' }, { offset: 1, color: 'rgba(16,185,129,0.01)' }] },
+            colorStops: [{ offset: 0, color: 'rgba(34,184,230,0.18)' }, { offset: 1, color: 'rgba(34,184,230,0.01)' }] },
         },
       },
       {
@@ -307,8 +312,8 @@ function buildLinhaOption(data) {
         smooth: true,
         symbolSize: 6,
         symbol: 'circle',
-        itemStyle: { color: C.zinc },
-        lineStyle: { color: C.zinc, width: 2, type: 'dashed' },
+        itemStyle: { color: C.magenta },
+        lineStyle: { color: C.magenta, width: 2, type: 'dashed' },
       },
     ],
   };
@@ -589,12 +594,12 @@ export default function Dashboard() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
-      <div className="w-5 h-5 rounded-full border-2 border-zinc-200 border-t-zinc-500 animate-spin" />
+      <div className="cmyk-loader"><span/><span/><span/><span/></div>
     </div>
   );
 
   if (!resumo) return (
-    <div className="flex items-center justify-center h-64 text-sm text-zinc-400">
+    <div className="flex items-center justify-center h-64 text-sm text-ink-400">
       Erro ao carregar o dashboard. Verifique se o servidor está rodando.
     </div>
   );
@@ -610,9 +615,20 @@ export default function Dashboard() {
 
       {/* ── 1. Header ── */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Dashboard</h1>
-          <p className="text-sm text-zinc-400 mt-0.5">Visão geral do seu fluxo de caixa</p>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex w-11 h-11 rounded-2xl bg-white border border-ink-100 items-center justify-center shadow-ink relative">
+            <span className="reg-mark" style={{ width: 22, height: 22 }} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight text-ink-900">Dashboard</h1>
+            <p className="text-sm text-ink-400 mt-0.5 flex items-center gap-1.5">
+              <span className="inline-block w-1.5 h-1.5 rounded-sm bg-cmyk-c" />
+              <span className="inline-block w-1.5 h-1.5 rounded-sm bg-cmyk-m" />
+              <span className="inline-block w-1.5 h-1.5 rounded-sm bg-cmyk-y" />
+              <span className="inline-block w-1.5 h-1.5 rounded-sm bg-cmyk-k" />
+              Visão geral do seu fluxo de caixa
+            </p>
+          </div>
         </div>
       </div>
 
@@ -811,7 +827,16 @@ export default function Dashboard() {
 
       {/* ── 8. Analytics da Gráfica ── */}
       <div>
-        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">Gráfica — Análise Comercial</p>
+        <div className="flex items-center gap-3 mb-4">
+          <p className="text-xs font-bold text-ink-500 uppercase tracking-[0.22em]">Gráfica — Análise Comercial</p>
+          <div className="flex-1 h-px bg-gradient-to-r from-ink-200 via-ink-100 to-transparent" />
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-sm bg-cmyk-c" />
+            <span className="w-2 h-2 rounded-sm bg-cmyk-m" />
+            <span className="w-2 h-2 rounded-sm bg-cmyk-y" />
+            <span className="w-2 h-2 rounded-sm bg-cmyk-k" />
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           <ChartCard title="Margem por Categoria" subtitle="Orçamentos aprovados">

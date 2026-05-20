@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import ComunynkLogo from './ComunynkLogo';
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-zinc-50 overflow-hidden font-sans">
+    <div className="flex h-screen paper-bg overflow-hidden font-sans">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-20 bg-black/50 md:hidden"
+          className="fixed inset-0 z-20 bg-ink-900/50 backdrop-blur-[2px] md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -22,26 +23,23 @@ export default function Layout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile top bar */}
-        <div className="md:hidden flex items-center gap-3 px-4 py-3 bg-[#0A0A0B] shrink-0 border-b border-white/[0.06]">
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 bg-white shrink-0 border-b border-ink-100 relative">
+          <div className="absolute top-0 left-0 right-0 h-[2px] cmyk-stripe-soft" />
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-white/60 hover:text-white transition-colors p-0.5"
+            className="text-ink-500 hover:text-ink-900 transition-colors p-0.5"
             aria-label="Abrir menu"
+            data-testid="sidebar-toggle-btn"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center shrink-0">
-              <span className="text-white text-[9px] font-bold tracking-tight">FC</span>
-            </div>
-            <span className="text-white font-semibold text-sm tracking-tight">Fluxo de Caixa</span>
-          </div>
+          <ComunynkLogo size="sm" withTagline={false} />
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-4 py-4 md:px-8 md:py-8">
+          <div className="max-w-7xl mx-auto px-4 py-5 md:px-8 md:py-8">
             <Outlet />
           </div>
         </div>
