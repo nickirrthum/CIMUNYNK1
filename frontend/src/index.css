@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    --cmyk-c: #22B8E6;
-    --cmyk-m: #E5379B;
-    --cmyk-y: #F5C518;
-    --cmyk-k: #2A2A2E;
+    --cmyk-c: #00AEEF;
+    --cmyk-m: #EC008C;
+    --cmyk-y: #FFD800;
+    --cmyk-k: #1A1A1A;
     --paper:  #FAF8F4;
   }
 
@@ -19,18 +19,18 @@
     font-family: 'Manrope', 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #2A2A2E;
+    color: #1A1A1A;
   }
 
   ::selection {
-    background: #F5C518;
-    color: #2A2A2E;
+    background: #FFD800;
+    color: #1A1A1A;
   }
 
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #22B8E6 0%, #E5379B 50%, #F5C518 100%);
+    background: linear-gradient(180deg, #00AEEF 0%, #EC008C 50%, #FFD800 100%);
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover { opacity: .85; }
@@ -62,31 +62,31 @@
   .cmyk-stripe {
     background-image: repeating-linear-gradient(
       135deg,
-      #22B8E6 0 6px,
-      #E5379B 6px 12px,
-      #F5C518 12px 18px,
-      #2A2A2E 18px 24px
+      #00AEEF 0 6px,
+      #EC008C 6px 12px,
+      #FFD800 12px 18px,
+      #1A1A1A 18px 24px
     );
   }
   .cmyk-stripe-soft {
     background-image: linear-gradient(
       135deg,
-      #22B8E6 0 25%,
-      #E5379B 25% 50%,
-      #F5C518 50% 75%,
-      #2A2A2E 75% 100%
+      #00AEEF 0 25%,
+      #EC008C 25% 50%,
+      #FFD800 50% 75%,
+      #1A1A1A 75% 100%
     );
   }
   .cmyk-stripe-thin {
     background-image: repeating-linear-gradient(
       135deg,
-      #22B8E6 0 2px,
+      #00AEEF 0 2px,
       transparent 2px 6px,
-      #E5379B 6px 8px,
+      #EC008C 6px 8px,
       transparent 8px 12px,
-      #F5C518 12px 14px,
+      #FFD800 12px 14px,
       transparent 14px 18px,
-      #2A2A2E 18px 20px,
+      #1A1A1A 18px 20px,
       transparent 20px 28px
     );
   }
@@ -115,10 +115,10 @@
     border-radius: 50%;
     background:
       conic-gradient(
-        #22B8E6 0deg 90deg,
-        #E5379B 90deg 180deg,
-        #F5C518 180deg 270deg,
-        #2A2A2E 270deg 360deg
+        #00AEEF 0deg 90deg,
+        #EC008C 90deg 180deg,
+        #FFD800 180deg 270deg,
+        #1A1A1A 270deg 360deg
       );
     -webkit-mask: radial-gradient(circle, transparent 5px, #000 5.5px, #000 7.5px, transparent 8px);
             mask: radial-gradient(circle, transparent 5px, #000 5.5px, #000 7.5px, transparent 8px);
@@ -134,8 +134,8 @@
     width: 10px;
     height: 10px;
     background:
-      linear-gradient(#2A2A2E, #2A2A2E) center / 100% 1px no-repeat,
-      linear-gradient(#2A2A2E, #2A2A2E) center / 1px 100% no-repeat;
+      linear-gradient(#1A1A1A, #1A1A1A) center / 100% 1px no-repeat,
+      linear-gradient(#1A1A1A, #1A1A1A) center / 1px 100% no-repeat;
     opacity: .35;
     pointer-events: none;
   }
@@ -154,10 +154,10 @@
       0 1px 0 rgba(0,0,0,0.18),
       0 2px 1px rgba(0,0,0,0.10);
   }
-  .wordmark-co { color: #22B8E6; }
-  .wordmark-mu { color: #E5379B; }
-  .wordmark-ny { color: #E0B617; }
-  .wordmark-nk { color: #2A2A2E; }
+  .wordmark-co { color: #00AEEF; }
+  .wordmark-mu { color: #EC008C; }
+  .wordmark-ny { color: #FFD800; }
+  .wordmark-nk { color: #1A1A1A; }
 
   /* ─── Ink-square icon (4 CMYK quadrants) ───────────────────────────── */
   .ink-square {
@@ -170,10 +170,10 @@
     overflow: hidden;
     box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.08);
   }
-  .ink-square > span:nth-child(1) { background: #22B8E6; }
-  .ink-square > span:nth-child(2) { background: #E5379B; }
-  .ink-square > span:nth-child(3) { background: #F5C518; }
-  .ink-square > span:nth-child(4) { background: #2A2A2E; }
+  .ink-square > span:nth-child(1) { background: #00AEEF; }
+  .ink-square > span:nth-child(2) { background: #EC008C; }
+  .ink-square > span:nth-child(3) { background: #FFD800; }
+  .ink-square > span:nth-child(4) { background: #1A1A1A; }
 
   /* ─── Registration mark (used in headers/loading) ──────────────────── */
   .reg-mark {
@@ -183,10 +183,10 @@
     border-radius: 50%;
     background:
       conic-gradient(
-        #22B8E6 0deg 90deg,
-        #E5379B 90deg 180deg,
-        #F5C518 180deg 270deg,
-        #2A2A2E 270deg 360deg
+        #00AEEF 0deg 90deg,
+        #EC008C 90deg 180deg,
+        #FFD800 180deg 270deg,
+        #1A1A1A 270deg 360deg
       );
     -webkit-mask: radial-gradient(circle, transparent 5.5px, #000 6px, #000 9px, transparent 9.5px);
             mask: radial-gradient(circle, transparent 5.5px, #000 6px, #000 9px, transparent 9.5px);
@@ -195,8 +195,8 @@
     content: "";
     position: absolute; inset: 0;
     background:
-      linear-gradient(#2A2A2E, #2A2A2E) center / 100% 1px no-repeat,
-      linear-gradient(#2A2A2E, #2A2A2E) center / 1px 100% no-repeat;
+      linear-gradient(#1A1A1A, #1A1A1A) center / 100% 1px no-repeat,
+      linear-gradient(#1A1A1A, #1A1A1A) center / 1px 100% no-repeat;
   }
 
   /* ─── Loading dot CMYK ────────────────────────────────────────────── */
@@ -208,10 +208,10 @@
     width: 8px; height: 8px; border-radius: 50%;
     animation: inkPulse 1s ease-in-out infinite;
   }
-  .cmyk-loader > span:nth-child(1) { background: #22B8E6; animation-delay: 0s;    }
-  .cmyk-loader > span:nth-child(2) { background: #E5379B; animation-delay: .12s;  }
-  .cmyk-loader > span:nth-child(3) { background: #F5C518; animation-delay: .24s;  }
-  .cmyk-loader > span:nth-child(4) { background: #2A2A2E; animation-delay: .36s;  }
+  .cmyk-loader > span:nth-child(1) { background: #00AEEF; animation-delay: 0s;    }
+  .cmyk-loader > span:nth-child(2) { background: #EC008C; animation-delay: .12s;  }
+  .cmyk-loader > span:nth-child(3) { background: #FFD800; animation-delay: .24s;  }
+  .cmyk-loader > span:nth-child(4) { background: #1A1A1A; animation-delay: .36s;  }
 }
 
 /* Recharts (kept for legacy) */

@@ -75,24 +75,27 @@ function openPrintPreview(q) {
   const phone   = q.client_contact?.replace(/\D/g, '') || '';
   const isPhone = phone.length >= 10;
 
-  const backendUrl = (import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace(/\/api\/?$/, '');
+  const backendUrl = (import.meta.env.VITE_API_URL || 'http://localhost:8001/api').replace(/\/api\/?$/, '');
+  const brandUrl   = `${window.location.origin}/brand`;
   const imageExts  = ['.jpg', '.jpeg', '.png', '.webp', '.tif', '.tiff'];
   const arteIsImg  = q.arte_filename && imageExts.some(ext => q.arte_filename.toLowerCase().endsWith(ext));
   const arteUrl    = q.arte_filename ? `${backendUrl}/uploads/${q.arte_filename}` : null;
+  const validade   = new Date(); validade.setDate(validade.getDate() + 15);
+  const validadeStr = validade.toLocaleDateString('pt-BR');
 
   const rows = items.map((item, i) => `
     <tr>
-      <td>${i + 1}</td>
-      <td>${item.name}</td>
-      <td>${Number(item.quantity).toLocaleString('pt-BR', { maximumFractionDigits: 3 })}</td>
-      <td>${item.unit}</td>
-      <td>${fmt(item.unit_price)}</td>
-      <td class="total">${fmt(item.total)}</td>
+      <td class="cell-num">${String(i + 1).padStart(2, '0')}</td>
+      <td class="cell-desc"><strong>${item.name}</strong></td>
+      <td class="cell-qty">${Number(item.quantity).toLocaleString('pt-BR', { maximumFractionDigits: 3 })}</td>
+      <td class="cell-unit">${item.unit}</td>
+      <td class="cell-price">${fmt(item.unit_price)}</td>
+      <td class="cell-total">${fmt(item.total)}</td>
     </tr>`).join('');
 
   const whatsappBtn = isPhone ? `
-    <a class="btn-whatsapp no-print"
-       href="https://wa.me/55${phone}?text=${encodeURIComponent(`Olá ${q.client_name}! Segue o orçamento #${q.id} da Comunynk Gráfica no valor de ${fmt(q.total_value)}. Qualquer dúvida estamos à disposição!`)}"
+    <a class="btn btn-whatsapp no-print"
+       href="https://wa.me/55${phone}?text=${encodeURIComponent(`Olá ${q.client_name}! Segue o orçamento #${q.id} da Comunynk no valor de ${fmt(q.total_value)}. Qualquer dúvida estamos à disposição!`)}"
        target="_blank">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       Enviar via WhatsApp
@@ -102,73 +105,571 @@ function openPrintPreview(q) {
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Orçamento #${q.id} — Comunynk Gráfica</title>
+<title>Orçamento #${String(q.id).padStart(4, '0')} — COMUNYNK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Archivo+Black&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --c-cyan:    #00AEEF;
+    --c-magenta: #EC008C;
+    --c-yellow:  #FFD800;
+    --c-black:   #1A1A1A;
+    --c-paper:   #FAF8F4;
+    --c-ink-50:  #F7F7F8;
+    --c-ink-100: #EEEEF1;
+    --c-ink-200: #D8D8DD;
+    --c-ink-400: #7C7C85;
+    --c-ink-500: #52525A;
+    --c-ink-700: #1A1A1A;
+    --c-ink-900: #0E0E10;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #111; }
-  .page { max-width: 780px; margin: 32px auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
-  .header { background: linear-gradient(135deg, #0f0e17 0%, #1a1a2e 100%); color: #fff; padding: 32px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
-  .company-name { font-size: 22px; font-weight: 700; letter-spacing: -.5px; }
-  .company-sub { font-size: 12px; opacity: .5; margin-top: 4px; }
-  .quote-meta { text-align: right; }
-  .quote-num { font-size: 28px; font-weight: 800; color: #E91E8C; letter-spacing: -1px; }
-  .quote-date { font-size: 12px; opacity: .5; margin-top: 4px; }
-  .body { padding: 32px 40px; }
-  .client-box { background: #f8f8f8; border-radius: 10px; padding: 16px 20px; margin-bottom: 28px; }
-  .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #999; margin-bottom: 4px; }
-  .client-name { font-size: 18px; font-weight: 600; color: #111; }
-  .client-contact { font-size: 13px; color: #666; margin-top: 2px; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-  thead tr { border-bottom: 2px solid #f0f0f0; }
-  th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #aaa; padding: 0 12px 10px; text-align: left; }
-  th:last-child, td:last-child { text-align: right; }
-  td { padding: 12px; font-size: 14px; color: #333; border-bottom: 1px solid #f5f5f5; }
-  td.total { font-weight: 600; color: #111; }
-  .totals { display: flex; justify-content: flex-end; padding-top: 8px; }
-  .total-box { background: #0f0e17; color: #fff; border-radius: 10px; padding: 16px 24px; min-width: 200px; text-align: right; }
-  .total-label { font-size: 11px; opacity: .5; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
-  .total-value { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: #E91E8C; }
-  .payment { margin-top: 24px; padding: 14px 20px; background: #f8f8f8; border-radius: 10px; font-size: 13px; color: #555; }
-  .payment strong { color: #111; }
-  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f0f0f0; font-size: 11px; color: #bbb; text-align: center; }
-  .validity { font-size: 11px; color: #aaa; margin-top: 8px; }
-  .arte-section { margin-top: 28px; }
-  .arte-img { display: block; max-width: 100%; max-height: 420px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; margin-top: 10px; }
-  .arte-file { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; background: #f8f8f8; border-radius: 8px; padding: 10px 16px; font-size: 13px; color: #555; }
-  .actions { display: flex; gap: 12px; justify-content: center; padding: 24px 40px; background: #fafafa; border-top: 1px solid #f0f0f0; }
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; }
-  .btn-print { background: #0f0e17; color: #fff; }
-  .btn-print:hover { background: #1a1a2e; }
-  .btn-whatsapp { background: #25D366; color: #fff; }
+  html, body {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #ECEAE4;
+    color: var(--c-ink-700);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    padding: 28px 16px;
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* ───── A4 Document Sheet ───── */
+  .sheet {
+    max-width: 820px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 32px rgba(42,42,46,0.16), 0 1px 0 rgba(42,42,46,0.06);
+    position: relative;
+  }
+
+  /* CMYK top edge stripe */
+  .top-edge {
+    height: 8px;
+    background: linear-gradient(90deg,
+      var(--c-cyan) 0%, var(--c-cyan) 25%,
+      var(--c-magenta) 25%, var(--c-magenta) 50%,
+      var(--c-yellow) 50%, var(--c-yellow) 75%,
+      var(--c-black) 75%, var(--c-black) 100%);
+  }
+
+  /* ───── Header ───── */
+  .header {
+    position: relative;
+    padding: 36px 48px 28px;
+    background: #fff;
+    border-bottom: 1px solid var(--c-ink-100);
+    overflow: hidden;
+  }
+  .header::before {
+    /* Diagonal CMYK stripes accent right side */
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: -50px;
+    width: 280px;
+    height: 130px;
+    transform: rotate(-12deg);
+    background: repeating-linear-gradient(135deg,
+      var(--c-cyan) 0 14px,
+      var(--c-magenta) 14px 28px,
+      var(--c-yellow) 28px 42px,
+      var(--c-black) 42px 56px);
+    opacity: 0.08;
+    z-index: 0;
+  }
+  .header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .logo-img { height: 70px; width: auto; display: block; }
+
+  .doc-meta {
+    text-align: right;
+    position: relative;
+  }
+  .doc-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--c-ink-400);
+    margin-bottom: 4px;
+  }
+  .doc-num {
+    font-family: 'Archivo Black', 'Manrope', sans-serif;
+    font-size: 32px;
+    color: var(--c-ink-900);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .doc-num .hash { color: var(--c-magenta); }
+  .doc-date {
+    font-size: 11px;
+    color: var(--c-ink-500);
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+  .doc-date strong { color: var(--c-ink-700); font-weight: 700; }
+
+  /* Registration mark */
+  .reg-mark {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background:
+      conic-gradient(
+        var(--c-cyan) 0deg 90deg,
+        var(--c-magenta) 90deg 180deg,
+        var(--c-yellow) 180deg 270deg,
+        var(--c-black) 270deg 360deg
+      );
+    -webkit-mask: radial-gradient(circle, transparent 6px, #000 7px, #000 12px, transparent 13px);
+            mask: radial-gradient(circle, transparent 6px, #000 7px, #000 12px, transparent 13px);
+  }
+  .reg-mark::before, .reg-mark::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(var(--c-black), var(--c-black)) center / 100% 1px no-repeat,
+      linear-gradient(var(--c-black), var(--c-black)) center / 1px 100% no-repeat;
+  }
+
+  /* ───── Tagline strip ───── */
+  .tagline-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 48px;
+    background: var(--c-ink-900);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .tagline-strip .dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  }
+  .tagline-strip .dot.c { background: var(--c-cyan); }
+  .tagline-strip .dot.m { background: var(--c-magenta); }
+  .tagline-strip .dot.y { background: var(--c-yellow); }
+  .tagline-strip .spacer { flex: 1; }
+  .tagline-strip .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+
+  /* ───── Body ───── */
+  .body {
+    padding: 32px 48px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--c-ink-400);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::before {
+    content: "";
+    width: 3px;
+    height: 14px;
+    background: var(--c-magenta);
+    border-radius: 2px;
+  }
+  .section-label.c::before { background: var(--c-cyan); }
+  .section-label.y::before { background: var(--c-yellow); }
+  .section-label.k::before { background: var(--c-black); }
+
+  /* ───── Client card ───── */
+  .client-card {
+    background: var(--c-paper);
+    border: 1px solid var(--c-ink-100);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .client-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg,
+      var(--c-cyan) 0%, var(--c-cyan) 25%,
+      var(--c-magenta) 25%, var(--c-magenta) 50%,
+      var(--c-yellow) 50%, var(--c-yellow) 75%,
+      var(--c-black) 75%, var(--c-black) 100%);
+  }
+  .client-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .client-field .label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--c-ink-400);
+    margin-bottom: 4px;
+  }
+  .client-field .value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-ink-900);
+    line-height: 1.2;
+  }
+  .client-field .value.muted {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-ink-500);
+  }
+
+  /* ───── Items table ───── */
+  .items {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 24px;
+  }
+  .items thead th {
+    background: var(--c-ink-900);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    padding: 12px 10px;
+    text-align: left;
+  }
+  .items thead th:first-child { border-radius: 8px 0 0 8px; }
+  .items thead th:last-child  { border-radius: 0 8px 8px 0; text-align: right; }
+  .items tbody td {
+    padding: 16px 10px;
+    font-size: 13px;
+    color: var(--c-ink-700);
+    border-bottom: 1px solid var(--c-ink-100);
+    vertical-align: middle;
+  }
+  .items tbody tr:nth-child(odd) td { background: rgba(34,184,230,0.025); }
+  .items tbody tr:last-child td { border-bottom: 2px solid var(--c-ink-200); }
+  .cell-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--c-magenta);
+    width: 36px;
+    font-size: 11px;
+  }
+  .cell-desc strong { color: var(--c-ink-900); font-weight: 600; font-size: 13px; }
+  .cell-qty, .cell-unit { color: var(--c-ink-500); font-size: 12px; }
+  .cell-price { color: var(--c-ink-500); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+  .cell-total {
+    text-align: right;
+    font-weight: 700;
+    color: var(--c-ink-900);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* ───── Totals ───── */
+  .totals-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .total-box {
+    background: var(--c-ink-900);
+    color: #fff;
+    border-radius: 14px;
+    padding: 18px 28px;
+    min-width: 280px;
+    text-align: right;
+    position: relative;
+    overflow: hidden;
+  }
+  .total-box::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--c-cyan) 0%, var(--c-cyan) 25%,
+      var(--c-magenta) 25%, var(--c-magenta) 50%,
+      var(--c-yellow) 50%, var(--c-yellow) 75%,
+      #fff 75%, #fff 100%);
+  }
+  .total-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .total-value {
+    font-family: 'Archivo Black', 'Manrope', sans-serif;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--c-yellow);
+  }
+  .total-value .currency {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    margin-right: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ───── Payment + Validity ───── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 26px;
+  }
+  .info-card {
+    background: #fff;
+    border: 1px solid var(--c-ink-100);
+    border-radius: 12px;
+    padding: 14px 18px;
+    position: relative;
+  }
+  .info-card .info-label {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--c-ink-400);
+    margin-bottom: 6px;
+  }
+  .info-card .info-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-ink-700);
+  }
+  .info-card.cyan    { border-left: 4px solid var(--c-cyan); }
+  .info-card.yellow  { border-left: 4px solid var(--c-yellow); }
+  .info-card.magenta { border-left: 4px solid var(--c-magenta); }
+
+  /* ───── Arte ───── */
+  .arte-section { margin-top: 30px; }
+  .arte-card {
+    background: var(--c-paper);
+    border: 1px dashed var(--c-ink-200);
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+  }
+  .arte-img {
+    display: block;
+    max-width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid var(--c-ink-100);
+  }
+  .arte-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--c-ink-100);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--c-ink-700);
+    font-weight: 500;
+  }
+  .arte-file svg { color: var(--c-cyan); }
+
+  /* ───── Terms + Footer ───── */
+  .terms {
+    margin-top: 28px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(34,184,230,0.04), rgba(229,55,155,0.04));
+    border: 1px solid var(--c-ink-100);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--c-ink-500);
+    line-height: 1.6;
+  }
+  .terms strong { color: var(--c-ink-700); font-weight: 700; }
+
+  .footer {
+    margin-top: 32px;
+    padding: 24px 48px;
+    background: var(--c-ink-900);
+    color: rgba(255,255,255,0.6);
+    position: relative;
+    overflow: hidden;
+  }
+  .footer::before {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+      var(--c-cyan) 0%, var(--c-cyan) 25%,
+      var(--c-magenta) 25%, var(--c-magenta) 50%,
+      var(--c-yellow) 50%, var(--c-yellow) 75%,
+      #fff 75%, #fff 100%);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+  .footer .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .footer .footer-brand .name {
+    font-family: 'Archivo Black', 'Manrope', sans-serif;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+  }
+  .footer .footer-brand .name .c { color: var(--c-cyan); }
+  .footer .footer-brand .name .m { color: var(--c-magenta); }
+  .footer .footer-brand .name .y { color: var(--c-yellow); }
+  .footer .footer-brand .name .k { color: #fff; }
+  .footer .footer-brand .tag {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+  }
+  .footer .disclaimer {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-align: right;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+  }
+
+  /* ───── Actions (screen only) ───── */
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 22px 16px;
+    margin: 24px auto 0;
+    max-width: 820px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: transform .12s ease, box-shadow .12s ease;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(42,42,46,0.15); }
+  .btn-print {
+    background: var(--c-ink-900);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    padding-left: 28px;
+  }
+  .btn-print::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: linear-gradient(180deg,
+      var(--c-cyan) 0%, var(--c-cyan) 25%,
+      var(--c-magenta) 25%, var(--c-magenta) 50%,
+      var(--c-yellow) 50%, var(--c-yellow) 75%,
+      transparent 75%);
+  }
+  .btn-whatsapp {
+    background: #25D366;
+    color: #fff;
+  }
   .btn-whatsapp svg { width: 16px; height: 16px; }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ───── Print ───── */
   @media print {
-    body { background: #fff; }
-    .page { box-shadow: none; border-radius: 0; margin: 0; }
+    body { background: #fff; padding: 0; background-image: none; }
+    .sheet { box-shadow: none; border-radius: 0; max-width: none; }
     .no-print { display: none !important; }
+    @page { margin: 0; size: A4; }
   }
 </style>
 </head>
 <body>
-<div class="page">
+
+<div class="sheet">
+  <div class="top-edge"></div>
+
   <div class="header">
-    <div>
-      <div class="company-name">Comunynk Gráfica</div>
-      <div class="company-sub">Impressão · Sinalização · Comunicação Visual</div>
-    </div>
-    <div class="quote-meta">
-      <div class="quote-num">Orçamento #${q.id}</div>
-      <div class="quote-date">Data: ${date}</div>
+    <div class="reg-mark" style="top: 16px; right: 16px;"></div>
+    <div class="header-content">
+      <img class="logo-img" src="${brandUrl}/wordmark.png" alt="COMUNYNK · Impressão & Comunicação Visual" onerror="this.style.display='none'" />
+      <div class="doc-meta">
+        <div class="doc-label">Orçamento</div>
+        <div class="doc-num"><span class="hash">#</span>${String(q.id).padStart(4, '0')}</div>
+        <div class="doc-date">Emitido em <strong>${date}</strong></div>
+      </div>
     </div>
   </div>
 
+  <div class="tagline-strip">
+    <span class="dot c"></span>
+    <span class="dot m"></span>
+    <span class="dot y"></span>
+    <span>Impressão · Sinalização · Comunicação Visual</span>
+    <span class="spacer"></span>
+    <span class="badge">CMYK READY</span>
+  </div>
+
   <div class="body">
-    <div class="client-box">
-      <div class="label">Cliente</div>
-      <div class="client-name">${q.client_name}</div>
-      ${q.client_contact ? `<div class="client-contact">${q.client_contact}</div>` : ''}
+    <div class="section-label">Destinatário</div>
+    <div class="client-card">
+      <div class="client-row">
+        <div class="client-field">
+          <div class="label">Cliente</div>
+          <div class="value">${q.client_name}</div>
+        </div>
+        <div class="client-field">
+          <div class="label">Contato</div>
+          <div class="value muted">${q.client_contact || '—'}</div>
+        </div>
+      </div>
     </div>
 
-    <table>
+    <div class="section-label c">Itens do Orçamento</div>
+    <table class="items">
       <thead>
         <tr>
           <th>#</th>
@@ -182,44 +683,67 @@ function openPrintPreview(q) {
       <tbody>${rows}</tbody>
     </table>
 
-    <div class="totals">
+    <div class="totals-row">
       <div class="total-box">
         <div class="total-label">Valor Total</div>
-        <div class="total-value">${fmt(q.total_value)}</div>
+        <div class="total-value"><span class="currency">R$</span>${(q.total_value || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
       </div>
     </div>
 
-    <div class="payment">
-      <strong>Pagamento:</strong> ${payment}
+    <div class="info-grid">
+      <div class="info-card cyan">
+        <div class="info-label">Forma de Pagamento</div>
+        <div class="info-value">${payment}</div>
+      </div>
+      <div class="info-card yellow">
+        <div class="info-label">Validade da Proposta</div>
+        <div class="info-value">Até ${validadeStr} (15 dias)</div>
+      </div>
     </div>
 
     ${arteUrl ? `
     <div class="arte-section">
-      <div class="label">Arte Enviada pelo Cliente</div>
-      ${arteIsImg
-        ? `<img src="${arteUrl}" class="arte-img" alt="Arte do cliente" />`
-        : `<div class="arte-file">
-             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"/></svg>
-             ${q.arte_originalname || q.arte_filename}
-           </div>`
-      }
+      <div class="section-label y">Arte Enviada pelo Cliente</div>
+      <div class="arte-card">
+        ${arteIsImg
+          ? `<img src="${arteUrl}" class="arte-img" alt="Arte do cliente" />`
+          : `<div class="arte-file">
+               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"/></svg>
+               ${q.arte_originalname || q.arte_filename}
+             </div>`
+        }
+      </div>
     </div>` : ''}
 
-    <div class="validity">Orçamento válido por 15 dias a partir da data de emissão.</div>
-
-    <div class="footer">
-      Comunynk Gráfica · Este documento é um orçamento e não constitui nota fiscal.
+    <div class="terms">
+      <strong>Termos & Condições.</strong> Este orçamento é uma proposta comercial e está sujeito à confirmação de estoque e cronograma de produção no momento da aprovação. Os valores podem ser revistos após este prazo. Pagamento conforme condições acordadas. Não constitui nota fiscal.
     </div>
   </div>
 
-  <div class="actions no-print">
-    <button class="btn btn-print" onclick="window.print()">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.75 19.5m10.56-5.671-.003.004L17.25 19.5M7.5 14.25 6.75 19.5m9 0 .75-5.25M17.25 19.5H6.75m10.5 0H6.75M21 7.5V18a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18V7.5m18 0A2.25 2.25 0 0 0 18.75 5.25H5.25A2.25 2.25 0 0 0 3 7.5m18 0H3"/></svg>
-      Imprimir / Salvar PDF
-    </button>
-    ${whatsappBtn}
+  <div class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div>
+          <div class="name"><span class="c">CO</span><span class="m">MU</span><span class="y">NY</span><span class="k">NK</span></div>
+          <div class="tag">Impressão & Comunicação Visual</div>
+        </div>
+      </div>
+      <div class="disclaimer">
+        Documento gerado eletronicamente<br/>
+        ${new Date().toLocaleString('pt-BR')}
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="actions no-print">
+  <button class="btn btn-print" onclick="window.print()">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.75 19.5m10.56-5.671-.003.004L17.25 19.5M7.5 14.25 6.75 19.5m9 0 .75-5.25M17.25 19.5H6.75m10.5 0H6.75M21 7.5V18a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18V7.5m18 0A2.25 2.25 0 0 0 18.75 5.25H5.25A2.25 2.25 0 0 0 3 7.5m18 0H3"/></svg>
+    Imprimir / Salvar PDF
+  </button>
+  ${whatsappBtn}
+</div>
+
 </body>
 </html>`;
 
@@ -1143,12 +1667,14 @@ export default function Quotes() {
 
               <button
                 onClick={() => openPrintPreview(selected)}
-                className="w-full flex items-center justify-center gap-2.5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors shadow-sm"
+                data-testid="open-pdf-preview-btn"
+                className="w-full relative overflow-hidden flex items-center justify-center gap-2.5 py-3 rounded-xl bg-ink-900 hover:bg-ink-800 text-white text-sm font-bold transition-colors shadow-ink group"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                <span className="absolute inset-y-0 left-0 w-1.5 cmyk-stripe-soft" />
+                <svg className="w-4 h-4 relative" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                 </svg>
-                Gerar Orçamento para Cliente
+                <span className="relative">Gerar Orçamento para Cliente</span>
               </button>
 
               <ArteSection quote={selected} onUpdated={handleArteUpdated} />

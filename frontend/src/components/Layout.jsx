@@ -35,7 +35,7 @@ export default function Layout() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
-          <ComunynkLogo size="sm" withTagline={false} />
+          <ComunynkLogo size="sm" variant="wordmark" />
         </div>
 
         <div className="flex-1 overflow-y-auto">

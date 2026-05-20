@@ -9,19 +9,19 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       colors: {
-        // Comunynk CMYK softened palette
+        // Comunynk CMYK pure palette (impressora padrão)
         cmyk: {
-          c: '#22B8E6',  // cyan
-          m: '#E5379B',  // magenta
-          y: '#F5C518',  // yellow (legible)
-          k: '#2A2A2E',  // key/black graphite
-          'c-soft': '#ECF8FD',
-          'm-soft': '#FCEBF4',
-          'y-soft': '#FEF7DA',
-          'k-soft': '#F4F4F6',
+          c: '#00AEEF',  // cyan puro
+          m: '#EC008C',  // magenta puro
+          y: '#FFD800',  // yellow vibrante (legível)
+          k: '#1A1A1A',  // key/black profundo
+          'c-soft': '#E5F6FD',
+          'm-soft': '#FDE5F1',
+          'y-soft': '#FFF8CC',
+          'k-soft': '#EEEEEE',
           'c-ring': '#7DD3F2',
           'm-ring': '#F4A4CC',
-          'y-ring': '#FBE38A',
+          'y-ring': '#FFE866',
         },
         ink: {
           50:  '#F7F7F8',
@@ -31,16 +31,16 @@ export default {
           400: '#7C7C85',
           500: '#52525A',
           600: '#3D3D44',
-          700: '#2A2A2E',
-          800: '#1B1B1E',
-          900: '#0E0E10',
+          700: '#1A1A1A',
+          800: '#101010',
+          900: '#000000',
         },
         paper: '#FAF8F4',
         paperDark: '#F1ECE3',
       },
       backgroundImage: {
         'paper-grain': "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
-        'cmyk-stripes': 'repeating-linear-gradient(135deg, #22B8E6 0 8px, #E5379B 8px 16px, #F5C518 16px 24px, #2A2A2E 24px 32px, transparent 32px 80px)',
+        'cmyk-stripes': 'repeating-linear-gradient(135deg, #00AEEF 0 8px, #EC008C 8px 16px, #FFD800 16px 24px, #1A1A1A 24px 32px, transparent 32px 80px)',
       },
       keyframes: {
         fadeUp: {

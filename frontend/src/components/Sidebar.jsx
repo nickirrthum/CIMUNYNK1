@@ -41,12 +41,12 @@ const IconLogout = () => (
 );
 
 const navItems = [
-  { to: '/',           end: true,  label: 'Caixa',              Icon: IconCaixa, group: 'financeiro', accent: '#22B8E6' },
-  { to: '/dashboard',  end: false, label: 'Dashboard',          Icon: IconGrid,  group: 'financeiro', accent: '#22B8E6' },
-  { to: '/receitas',   end: false, label: 'Receitas',           Icon: IconUp,    group: 'financeiro', accent: '#22B8E6' },
-  { to: '/despesas',   end: false, label: 'Despesas',           Icon: IconDown,  group: 'financeiro', accent: '#E5379B' },
-  { to: '/quotes',     end: false, label: 'Orçamentos',         Icon: IconList,  group: 'grafica',    accent: '#F5C518' },
-  { to: '/products',   end: false, label: 'Produtos',           Icon: IconTag,   group: 'grafica',    accent: '#F5C518' },
+  { to: '/',           end: true,  label: 'Caixa',              Icon: IconCaixa, group: 'financeiro', accent: '#00AEEF' },
+  { to: '/dashboard',  end: false, label: 'Dashboard',          Icon: IconGrid,  group: 'financeiro', accent: '#00AEEF' },
+  { to: '/receitas',   end: false, label: 'Receitas',           Icon: IconUp,    group: 'financeiro', accent: '#00AEEF' },
+  { to: '/despesas',   end: false, label: 'Despesas',           Icon: IconDown,  group: 'financeiro', accent: '#EC008C' },
+  { to: '/quotes',     end: false, label: 'Orçamentos',         Icon: IconList,  group: 'grafica',    accent: '#FFD800' },
+  { to: '/products',   end: false, label: 'Produtos',           Icon: IconTag,   group: 'grafica',    accent: '#FFD800' },
 ];
 
 export default function Sidebar({ onClose }) {
@@ -62,7 +62,7 @@ export default function Sidebar({ onClose }) {
 
       {/* Logo */}
       <div className="px-5 pt-6 pb-5 border-b border-ink-100 relative">
-        <ComunynkLogo size="sm" withTagline />
+        <ComunynkLogo size="md" variant="wordmark" />
         {/* corner registration mark */}
         <div className="absolute top-3 right-4 reg-mark opacity-60" aria-hidden="true" />
       </div>

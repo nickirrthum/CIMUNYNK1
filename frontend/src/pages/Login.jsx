@@ -37,8 +37,8 @@ export default function Login() {
 
         {/* Logo lockup */}
         <div className="flex flex-col items-center mb-8">
-          <ComunynkLogo size="lg" withTagline />
-          <p className="text-[12px] text-ink-400 mt-6 tracking-wide">
+          <ComunynkLogo size="xl" variant="wordmark" />
+          <p className="text-[12px] text-ink-400 mt-5 tracking-wide">
             Sistema de Fluxo de Caixa
           </p>
         </div>
@@ -125,7 +125,7 @@ export default function Login() {
 
         {/* Footer */}
         <p className="text-center text-[10px] text-ink-400 mt-6 tracking-widest uppercase">
-          Comunynk · CMYK <span className="text-cmyk-c">C</span><span className="text-cmyk-m">M</span><span className="text-[#E0B617]">Y</span><span className="text-ink-700">K</span>
+          Comunynk · CMYK <span className="text-cmyk-c">C</span><span className="text-cmyk-m">M</span><span className="text-[#FFD800]">Y</span><span className="text-ink-700">K</span>
         </p>
 
       </div>

@@ -22,15 +22,15 @@ const STATUS_CLS = {
 
 // Comunynk CMYK softened palette
 const C = {
-  cyan:    '#22B8E6',
-  magenta: '#E5379B',
-  yellow:  '#E0B617',  // darkened yellow for legibility
-  black:   '#2A2A2E',
+  cyan:    '#00AEEF',
+  magenta: '#EC008C',
+  yellow:  '#FFD800',  // darkened yellow for legibility
+  black:   '#1A1A1A',
   // semantic aliases (keeping CMYK soul)
-  emerald: '#22B8E6',  // receita / positivo → cyan
-  rose:    '#E5379B',  // despesa / negativo → magenta
-  blue:    '#22B8E6',
-  amber:   '#E0B617',
+  emerald: '#00AEEF',  // receita / positivo → cyan
+  rose:    '#EC008C',  // despesa / negativo → magenta
+  blue:    '#00AEEF',
+  amber:   '#FFD800',
   indigo:  '#6B5BD2',
   zinc:    '#52525A',
 };
@@ -133,14 +133,14 @@ function buildBarOption(data) {
         barMaxWidth: 28,
         data: data.map(d => d.receitas ?? 0),
         itemStyle: { color: C.cyan, borderRadius: [4, 4, 0, 0] },
-        emphasis: { itemStyle: { color: '#1A9ECF' } },
+        emphasis: { itemStyle: { color: '#0094CC' } },
       },
       {
         name: 'Despesas',
         type: 'bar',
         barMaxWidth: 28,
         data: data.map(d => d.despesas ?? 0),
-        itemStyle: { color: '#F4A4CC', borderRadius: [4, 4, 0, 0] },
+        itemStyle: { color: '#F799CB', borderRadius: [4, 4, 0, 0] },
         emphasis: { itemStyle: { color: C.magenta } },
       },
     ],
@@ -252,7 +252,7 @@ function buildMargemOption(data) {
         itemStyle: { color: C.cyan, borderRadius: [0, 6, 6, 0] },
       })),
       barMaxWidth: 20,
-      emphasis: { itemStyle: { color: '#1A9ECF' } },
+      emphasis: { itemStyle: { color: '#0094CC' } },
       animationEasing: 'elasticOut',
     }],
   };
